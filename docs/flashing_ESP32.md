@@ -191,9 +191,14 @@ If this is the first time, then follow instructions on how to [Download the firm
 
 There a few things you need to know when rolling back firmware.
 
-- When writing a different version of the firmware, use the `--erase-all` option in the `esptool.py` command. Otherwise, the filesystem will not be erased, and it will be invalid.
+- When writing a different version of the firmware, first erase the flash in the `esptool.py` command. Otherwise, the filesystem will not be erased, and it will be invalid.
+
+```{}
+sudo /home/steve/.espressif/python_env/$IDF_ENV/bin/python /home/steve/esp/esp-idf/components/esptool_py/esptool/esptool.py -p $DEVICE --chip esp32s3 erase_flash
+```
+
 - The file fsbackup.bin is specific to the version of the firmware. You cannot copy it to a different firmware version
 
 ### Browser-based
 
-https://espressif.github.io/esptool-js/
+<https://espressif.github.io/esptool-js/>
