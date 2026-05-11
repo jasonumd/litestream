@@ -548,7 +548,7 @@ class AudioPlayer:
         path = url[1] if url[1].startswith("/") else "/" + url[1]
         return host, port, path
 
-    def read_http_header(self, trackno, offset=0, port=80):
+    def read_http_header(self, trackno, offset=0, port=80, retries=1):
         if trackno is None:
             return
 
@@ -735,9 +735,14 @@ class AudioPlayer:
             print("Bad URL:", url)
             print("Headers:", response_headers)
             print("TrackLength:", track_length)
+            if retries > 0:
+                print(f"Retrying... ({retries} retries left)")
+                self.read_http_header(trackno, offset, port, retries - 1)
+                return
             self.current_track_bytes_read = 0
             self.current_track += 1
             self.next_track = self.set_next_track()
+            self.callbacks["display"](*self.track_names())
             self.handle_end_of_track_read()
             return
 
