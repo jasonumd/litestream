@@ -22,6 +22,8 @@ from errno import EINPROGRESS
 import select
 import ssl
 
+from timemachine_config import INDEXER_BASE_URL
+
 try:
     import AudioDecoder
 
@@ -413,12 +415,10 @@ class AudioPlayer:
         assert len(tracklist) == len(urllist)
         self.ntracks = len(tracklist)
         self.tracklist = [re.sub(r"^\d*[\.\)\- ]*", "", x) for x in tracklist]
-        ### TEMPORARY ###
-        setbreak_url = "https://storage.googleapis.com/spertilo-data/sundry/silence600.ogg"
+        setbreak_url = f"{INDEXER_BASE_URL}/sundry/silence600.ogg"
         urllist = [x if not (x.endswith("silence600.ogg")) else setbreak_url for x in urllist]
-        encorebreak_url = "https://storage.googleapis.com/spertilo-data/sundry/silence0.ogg"
+        encorebreak_url = f"{INDEXER_BASE_URL}/sundry/silence0.ogg"
         urllist = [x if not (x.endswith("silence0.ogg")) else encorebreak_url for x in urllist]
-        ### END TEMPORARY ###
         urllist = [x.replace(" ", "%20") for x in urllist]
         self.playlist = urllist
 

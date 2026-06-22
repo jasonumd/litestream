@@ -24,7 +24,13 @@ import time
 import utils
 from mrequests import mrequests as requests
 
-CLOUD_API = "https://gratefuldeadtimemachine.com"  # google cloud version mapped to here
+from timemachine_config import INDEXER_BASE_URL
+
+# Legacy archive.org endpoints retained for rpm78 / datpiff / classical_utils,
+# which still pull from the upstream eichblatt data sources. The livemusic app
+# (our fork's main path) no longer touches these — it goes through
+# INDEXER_BASE_URL via the rewritten collection_names() below.
+CLOUD_API = "https://gratefuldeadtimemachine.com"
 CLOUD_PATH = "https://storage.googleapis.com/spertilo-data"
 MAX_COLLECTIONS = 35
 STOP_CHAR = "$StoP$"
@@ -242,11 +248,11 @@ def get_request(url, outpath="/tmp.json"):
 
 
 def collection_names():
-    # Note: This function appears to only work right after a reboot.
+    # Fetch the artist list from the Navidrome-fed indexer.
+    # Returns {archive_name: [artist_list]} to match the upstream shape; our
+    # fork has a single source so the dict has one key.
     all_collection_names_dict = {}
-    api_request = f"{CLOUD_API}/all_collection_names/"
-    cloud_url = f"{CLOUD_PATH}/sundry/etree_collection_names.json"
-    all_collection_names_dict = {"Phishin Archive": ["Phish"]}
+    cloud_url = f"{INDEXER_BASE_URL}/sundry/etree_collection_names.json"
     resp = None
     status = 0
     itries = 0
@@ -262,7 +268,7 @@ def collection_names():
             if status == 200:
                 utils.print_log("Collection Names successfully downloaded")
                 colls = resp.json()["items"]
-                all_collection_names_dict["Internet Archive"] = colls
+                all_collection_names_dict["Navidrome"] = colls
     except Exception as e:
         utils.print_log(f"Exception when loading collnames {e}")
     finally:

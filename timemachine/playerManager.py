@@ -5,6 +5,8 @@ import hashlib
 # import requests
 import async_urequests as requests
 
+from timemachine_config import INDEXER_BASE_URL
+
 """
 try:
     from async_urequests import urequests as requests
@@ -65,9 +67,9 @@ class PlayerManager:
         self.block_pump = False
         self.chunk_generator = None
 
-        setbreak_url = "https://storage.googleapis.com/spertilo-data/sundry/silence600.ogg"
+        setbreak_url = f"{INDEXER_BASE_URL}/sundry/silence600.ogg"
         urls = [x if not (x.endswith("silence600.ogg")) else setbreak_url for x in urls]
-        encorebreak_url = "https://storage.googleapis.com/spertilo-data/sundry/silence0.ogg"
+        encorebreak_url = f"{INDEXER_BASE_URL}/sundry/silence0.ogg"
         urls = [x if not (x.endswith("silence0.ogg")) else encorebreak_url for x in urls]
         urls = [x.replace(" ", "%20") for x in urls]
         self.urls = urls

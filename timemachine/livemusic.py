@@ -45,9 +45,16 @@ import fonts.date_font as date_font
 venue_font = pfont_small
 
 
-CLOUD_PATH = "https://storage.googleapis.com/spertilo-data"
-API = "https://gratefuldeadtimemachine.com"  # google cloud version mapped to here
-# API = "https://deadstream-api-3pqgajc26a-uc.a.run.app"  # google cloud version
+from timemachine_config import INDEXER_BASE_URL
+
+# Both constants point at the same Navidrome-fed indexer in the fork; in
+# upstream eichblatt CLOUD_PATH was static GCS and API was a Cloud Run
+# fallback. We have one source, so the fallback branches in select_date /
+# get_tape_ids / add_vcs hit the same host (their URL shapes 404 there,
+# but they're only reached when the primary path fails, which is a fail
+# state regardless).
+CLOUD_PATH = INDEXER_BASE_URL
+API = INDEXER_BASE_URL
 # API = 'http://westmain:5000' # westmain
 AUTO_PLAY = True
 DATE_SET_TIME = time.ticks_ms()
@@ -72,13 +79,13 @@ playpause_bbox = tm.Bbox(0.91 * tm.SCREEN_WIDTH, ycursor, tm.SCREEN_WIDTH, tm.SC
 
 def get_collection_list():
     state = utils.load_state()
-    coll_list = state.get("collection_list", ["GratefulDead"])
+    coll_list = state.get("collection_list", ["Grateful Dead"])
     return coll_list
 
 
 def append_to_collection_list(new_collection):
     state = utils.load_state()
-    current_list = state.get("collection_list", ["GratefulDead"])
+    current_list = state.get("collection_list", ["Grateful Dead"])
     full_list = current_list + [new_collection]
     state["collection_list"] = full_list
     utils.save_state(state)
@@ -86,7 +93,7 @@ def append_to_collection_list(new_collection):
 
 def delete_from_collection_list(old_collection):
     state = utils.load_state()
-    full_list = state.get("collection_list", ["GratefulDead"])
+    full_list = state.get("collection_list", ["Grateful Dead"])
     full_list = [elem for elem in full_list if elem != old_collection]
     state["collection_list"] = full_list
     if len(full_list) > 0:
@@ -99,6 +106,50 @@ def set_collection_list(collection_list):
     state = utils.load_state()
     state["collection_list"] = collection_list
     utils.save_state(state)
+
+
+# Legacy archive.org collection IDs → Navidrome artist names. Used to
+# migrate state from a pre-fork device on first boot. Only the upstream
+# defaults are covered; anything else stays as-is and falls back to the
+# Add Artist UI if it no longer resolves.
+_LEGACY_COLLECTION_MAP = {
+    "GratefulDead": "Grateful Dead",
+    "Phish": "Phish",
+    "KingGizzardAndTheLizardWizard": "King Gizzard and the Lizard Wizard",
+    "GooseBand": "Goose Band",
+    "DeadAndCompany": "Dead & Company",
+    "TedeschiTrucksBand": "Tedeschi Trucks Band",
+    "JerryGarciaBand": "Jerry Garcia Band",
+}
+
+
+def migrate_legacy_state():
+    """Rename archive.org IDs to Navidrome artist names. Idempotent.
+
+    Safe to call on every boot — does nothing if state is already migrated.
+    Clears selected_tape_id since archive.org tape IDs never resolve in
+    Navidrome trackdata.json; the device will pick the default tape for
+    the date instead.
+    """
+    state = utils.load_state()
+    changed = False
+    coll_list = state.get("collection_list", [])
+    new_list = [_LEGACY_COLLECTION_MAP.get(c, c) for c in coll_list]
+    if new_list != coll_list:
+        state["collection_list"] = new_list
+        changed = True
+    sel = state.get("selected_collection")
+    if sel in _LEGACY_COLLECTION_MAP:
+        state["selected_collection"] = _LEGACY_COLLECTION_MAP[sel]
+        changed = True
+    if state.get("selected_tape_id"):
+        # Old archive.org IDs (e.g. "gd1977-05-08.137325.flac16") won't match
+        # anything in our trackdata.json. Clearing forces the default tape.
+        state["selected_tape_id"] = ""
+        changed = True
+    if changed:
+        print(f"migrated legacy state: collection_list={new_list}")
+        utils.save_state(state)
 
 
 def configure(choice):
@@ -135,7 +186,7 @@ def configure_artists():
         set_collection_list(["Phish"])
         utils.reset()
     elif choice == "Dead Only":
-        set_collection_list(["GratefulDead"])
+        set_collection_list(["Grateful Dead"])
         utils.reset()
     elif choice == "Other":
         other_choices = ["Gizzard Only", "Goose Only", "Dead + Phish", "Cancel"]
@@ -147,7 +198,7 @@ def configure_artists():
             set_collection_list(["GooseBand"])
             utils.reset()
         elif other_choice == "Dead + Phish":
-            set_collection_list(["GratefulDead", "Phish"])
+            set_collection_list(["Grateful Dead", "Phish"])
             utils.reset()
         else:
             pass
@@ -943,6 +994,7 @@ def run():
     """run the livemusic controls"""
     try:
         tm.label_soft_knobs("-", "-", "-")
+        migrate_legacy_state()
         state = utils.load_state()
         show_collections(state["collection_list"])
         initialize_knobs()
@@ -963,7 +1015,7 @@ def run():
         msg = f"livemusic: {e}"
         if isinstance(e, OSError) and "ECONNABORTED" in msg:
             tm.clear_screen()
-            tm.write("Error at the archive", 0, 0, color=tm.YELLOW, font=pfont_med, show_end=-2)
+            tm.write("Indexer unreachable", 0, 0, color=tm.YELLOW, font=pfont_med, show_end=-2)
             tm.write("Press Select to return", 0, 2 * pfont_med.HEIGHT, font=pfont_med, show_end=-2)
             if tm.poll_for_button(tm.pSelect, timeout=12 * 3600):
                 run()

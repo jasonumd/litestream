@@ -1,0 +1,8 @@
+{
+  "_comment": "Copy this file to navidrome.local.json and fill in your values. The real file is gitignored.",
+  "url": "http://navidrome.local:4533",
+  "username": "your-navidrome-user",
+  "password": "your-navidrome-password",
+  "client_name": "timemachine",
+  "db_path": "/var/lib/navidrome/navidrome.db"
+}

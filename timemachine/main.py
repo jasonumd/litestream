@@ -120,8 +120,10 @@ def update_code():
     tm.write("code", 0, 40 + tm.pfont_med.HEIGHT, tm.pfont_med, tm.RED)
 
     try:
-        base_url = "github:eichblatt/litestream/timemachine/package.json"
-        version = "releases" if not utils.is_dev_box() else "dev"
+        base_url = "github:jasonumd/litestream/timemachine/package.json"
+        # Personal fork uses a single `main` branch; the upstream prod/dev
+        # split (releases vs dev branches) isn't worth maintaining solo.
+        version = "main"
         target = "test_download"
         print(f"Installing from {base_url}, version {version}, target {target}")
         mip.install(base_url, version=version, target=target)

@@ -2,143 +2,147 @@
     "urls": [
         [
             "__init__.py",
-            "github:eichblatt/litestream/timemachine/__init__.py"
+            "github:jasonumd/litestream/timemachine/__init__.py"
         ],
         [
             "audioPlayer.py",
-            "github:eichblatt/litestream/timemachine/audioPlayer.py"
+            "github:jasonumd/litestream/timemachine/audioPlayer.py"
         ],
         [
             "audioPlayer2.py",
-            "github:eichblatt/litestream/timemachine/audioPlayer2.py"
+            "github:jasonumd/litestream/timemachine/audioPlayer2.py"
         ],
         [
             "board.py",
-            "github:eichblatt/litestream/timemachine/board.py"
+            "github:jasonumd/litestream/timemachine/board.py"
         ],
         [
             "boot.py",
-            "github:eichblatt/litestream/timemachine/boot.py"
+            "github:jasonumd/litestream/timemachine/boot.py"
         ],
         [
             "utils.py",
-            "github:eichblatt/litestream/timemachine/utils.py"
+            "github:jasonumd/litestream/timemachine/utils.py"
         ],
         [
             "archive_utils.py",
-            "github:eichblatt/litestream/timemachine/archive_utils.py"
+            "github:jasonumd/litestream/timemachine/archive_utils.py"
         ],
         [
             "main.py",
-            "github:eichblatt/litestream/timemachine/main.py"
+            "github:jasonumd/litestream/timemachine/main.py"
         ],
         [
             "livemusic.py",
-            "github:eichblatt/litestream/timemachine/livemusic.py"
+            "github:jasonumd/litestream/timemachine/livemusic.py"
+        ],
+        [
+            "timemachine_config.py",
+            "github:jasonumd/litestream/timemachine/timemachine_config.py"
         ],
         [
             "classical.py",
-            "github:eichblatt/litestream/timemachine/classical.py"
+            "github:jasonumd/litestream/timemachine/classical.py"
         ],
         [
             "classical_utils.py",
-            "github:eichblatt/litestream/timemachine/classical_utils.py"
+            "github:jasonumd/litestream/timemachine/classical_utils.py"
         ],
         [
             "playerManager.py",
-            "github:eichblatt/litestream/timemachine/playerManager.py"
+            "github:jasonumd/litestream/timemachine/playerManager.py"
         ],
         [
             "rpm78.py",
-            "github:eichblatt/litestream/timemachine/rpm78.py"
+            "github:jasonumd/litestream/timemachine/rpm78.py"
         ],
         [
             "fonts/__init__.py",
-            "github:eichblatt/litestream/timemachine/fonts/__init__.py"
+            "github:jasonumd/litestream/timemachine/fonts/__init__.py"
         ],
         [
             "fonts/date_font.py",
-            "github:eichblatt/litestream/timemachine/fonts/date_font.py"
+            "github:jasonumd/litestream/timemachine/fonts/date_font.py"
         ],
         [
             "fonts/DejaVu_20x.py",
-            "github:eichblatt/litestream/timemachine/fonts/DejaVu_20x.py"
+            "github:jasonumd/litestream/timemachine/fonts/DejaVu_20x.py"
         ],
         [
             "fonts/DejaVu_33.py",
-            "github:eichblatt/litestream/timemachine/fonts/DejaVu_33.py"
+            "github:jasonumd/litestream/timemachine/fonts/DejaVu_33.py"
         ],
         [
             "fonts/DejaVu_60.py",
-            "github:eichblatt/litestream/timemachine/fonts/DejaVu_60.py"
+            "github:jasonumd/litestream/timemachine/fonts/DejaVu_60.py"
         ],
         [
             "fonts/NotoSans_18.py",
-            "github:eichblatt/litestream/timemachine/fonts/NotoSans_18.py"
+            "github:jasonumd/litestream/timemachine/fonts/NotoSans_18.py"
         ],
         [
             "fonts/NotoSans_bold_18.py",
-            "github:eichblatt/litestream/timemachine/fonts/NotoSans_bold_18.py"
+            "github:jasonumd/litestream/timemachine/fonts/NotoSans_bold_18.py"
         ],
         [
             "fonts/NotoSans_24.py",
-            "github:eichblatt/litestream/timemachine/fonts/NotoSans_24.py"
+            "github:jasonumd/litestream/timemachine/fonts/NotoSans_24.py"
         ],
         [
             "fonts/NotoSans_bold_24.py",
-            "github:eichblatt/litestream/timemachine/fonts/NotoSans_bold_24.py"
+            "github:jasonumd/litestream/timemachine/fonts/NotoSans_bold_24.py"
         ],
         [
             "fonts/NotoSans_32.py",
-            "github:eichblatt/litestream/timemachine/fonts/NotoSans_32.py"
+            "github:jasonumd/litestream/timemachine/fonts/NotoSans_32.py"
         ],
         [
             "mrequests/mrequests.mpy",
-            "github:eichblatt/litestream/timemachine/mrequests/mrequests.mpy"
+            "github:jasonumd/litestream/timemachine/mrequests/mrequests.mpy"
         ],
         [
             "mrequests/urlencode.mpy",
-            "github:eichblatt/litestream/timemachine/mrequests/urlencode.mpy"
+            "github:jasonumd/litestream/timemachine/mrequests/urlencode.mpy"
         ],
         [
             "mrequests/urlparseqs.py",
-            "github:eichblatt/litestream/timemachine/mrequests/urlparseqs.mpy"
+            "github:jasonumd/litestream/timemachine/mrequests/urlparseqs.mpy"
         ],
         [
             "mrequests/urlunquote.mpy",
-            "github:eichblatt/litestream/timemachine/mrequests/urlunquote.mpy"
+            "github:jasonumd/litestream/timemachine/mrequests/urlunquote.mpy"
         ],
         [
             "async_urequests.py",
-            "github:eichblatt/litestream/timemachine/async_urequests.py"
+            "github:jasonumd/litestream/timemachine/async_urequests.py"
         ],
         [
             "uQR/uQR.py",
-            "github:eichblatt/litestream/timemachine/uQR/uQR.py"
+            "github:jasonumd/litestream/timemachine/uQR/uQR.py"
         ],
         [
             "uQR/LICENSE",
-            "github:eichblatt/litestream/timemachine/uQR/LICENSE"
+            "github:jasonumd/litestream/timemachine/uQR/LICENSE"
         ],
         [
             "ota32/ota.py",
-            "github:eichblatt/litestream/timemachine/ota32/ota.py"
+            "github:jasonumd/litestream/timemachine/ota32/ota.py"
         ],
         [
             "ota32/open_url.py",
-            "github:eichblatt/litestream/timemachine/ota32/open_url.py"
+            "github:jasonumd/litestream/timemachine/ota32/open_url.py"
         ],
         [
             "ota32/__init__.py",
-            "github:eichblatt/litestream/timemachine/ota32/__init__.py"
+            "github:jasonumd/litestream/timemachine/ota32/__init__.py"
         ],
         [
             ".VERSION",
-            "github:eichblatt/litestream/.VERSION"
+            "github:jasonumd/litestream/.VERSION"
         ],
         [
             "LICENSE",
-            "github:eichblatt/litestream/LICENSE"
+            "github:jasonumd/litestream/LICENSE"
         ]
 
     ]

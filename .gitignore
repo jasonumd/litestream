@@ -154,3 +154,9 @@ timemachine/playerManager_blocking.py
 timemachine/classical_working.py
 timemachine/classical_orig.py
 MicropythonFirmware/latest/flashfiles.zip
+
+# Navidrome fork — local config & indexer output (never commit)
+navidrome.local.json
+indexer/output/
+indexer/.venv/
+navidrome.db
