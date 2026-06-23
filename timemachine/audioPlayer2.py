@@ -541,9 +541,15 @@ class TrackReader:
 
     def parse_url(self, location):
         parts = location.decode().split("://", 1)
-        port = 80 if parts[0] == "http" else 443 if parts[0] == "https" else 0
+        default_port = 80 if parts[0] == "http" else 443 if parts[0] == "https" else 0
         url = parts[1].split("/", 1)
-        host = url[0]
+        host_port = url[0]
+        if ":" in host_port:
+            host, port_str = host_port.rsplit(":", 1)
+            port = int(port_str)
+        else:
+            host = host_port
+            port = default_port
         path = url[1] if url[1].startswith("/") else "/" + url[1]
         return host, port, path
 

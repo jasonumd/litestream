@@ -62,6 +62,25 @@ COLLS_LOADED_TIME = None
 CONFIG_CHOICES = ["Artists"]
 
 
+def _quote(s):
+    """Minimal URL path-segment encoding for the indexer paths.
+
+    Upstream collection IDs ("GratefulDead", "Phish") had no special chars,
+    so URLs were built with bare f-strings. Navidrome artist names ("Grateful
+    Dead", "Dead & Company") and tape IDs ("sbd 9514") contain spaces and
+    ampersands that mrequests sends as-is, producing an invalid HTTP request
+    line and an HTML 400/404 response. Quoting here keeps the on-disk JSON
+    filenames human-readable while the wire URLs stay valid.
+    """
+    return (str(s)
+            .replace("%", "%25")  # must be first
+            .replace(" ", "%20")
+            .replace("&", "%26")
+            .replace("#", "%23")
+            .replace("?", "%3F")
+            .replace("+", "%2B"))
+
+
 # --------------------------------------------------------------- Bboxes
 ycursor = 0
 stage_date_bbox = tm.Bbox(0, ycursor, tm.SCREEN_WIDTH, large_font.HEIGHT)
@@ -231,11 +250,11 @@ def select_date(coll_dict, key_date, ntape=0, collection=None, tape_id=None):
         ntape = ntape // len(valid_collections)
 
     tracklist = []
-    tape_ids_url = f"{CLOUD_PATH}/tapes/{collection}/{key_date}/tape_ids.json"
+    tape_ids_url = f"{CLOUD_PATH}/tapes/{_quote(collection)}/{key_date}/tape_ids.json"
 
     if tape_id is not None:
         selected_tape_id = tape_id
-        trackdata_url = f"{CLOUD_PATH}/tapes/{collection}/{key_date}/{tape_id}/trackdata.json"
+        trackdata_url = f"{CLOUD_PATH}/tapes/{_quote(collection)}/{key_date}/{_quote(tape_id)}/trackdata.json"
         try:
             resp = requests.get(trackdata_url)
             if resp.status_code == 200:
@@ -252,14 +271,14 @@ def select_date(coll_dict, key_date, ntape=0, collection=None, tape_id=None):
                 tape_ids = resp.json()
                 ntapes = len(tape_ids)
                 selected_tape_id = tape_ids[ntape % ntapes][0]
-                trackdata_url = f"{CLOUD_PATH}/tapes/{collection}/{key_date}/{selected_tape_id}/trackdata.json"
+                trackdata_url = f"{CLOUD_PATH}/tapes/{_quote(collection)}/{key_date}/{_quote(selected_tape_id)}/trackdata.json"
                 resp = requests.get(trackdata_url)
                 response = resp.json()
                 collection = response["collection"]
                 tracklist = response["tracklist"]
                 urls = response["urls"]
             else:
-                api_request = f"{API}/track_urls/{key_date}?collections={collection}&ntape={ntape}"
+                api_request = f"{API}/track_urls/{key_date}?collections={_quote(collection)}&ntape={ntape}"
                 print(f"API request is {api_request}")
                 resp = requests.get(api_request)
                 response = resp.json()
@@ -282,7 +301,7 @@ def get_tape_ids(coll_dict, key_date):
     for collection, cdict in coll_dict.items():
         if cdict.get(key_date, None):
             key_date_colls.append(collection)
-            url = f"{CLOUD_PATH}/tapes/{collection}/{key_date}/tape_ids.json"
+            url = f"{CLOUD_PATH}/tapes/{_quote(collection)}/{key_date}/tape_ids.json"
             print(f"URL is {url}")
             try:
                 resp = None
@@ -290,7 +309,7 @@ def get_tape_ids(coll_dict, key_date):
                 if resp.status_code == 200:
                     tape_ids = tape_ids + [[collection, x[0]] for x in resp.json()]
                 elif resp.status_code == 404:
-                    api_request = f"{API}/tape_ids/{key_date}?collections={collection}"
+                    api_request = f"{API}/tape_ids/{key_date}?collections={_quote(collection)}"
                     print(f"api_request is {api_request}")
                     resp = requests.get(api_request)
                     these_tape_ids = resp.json()[collection]
@@ -842,7 +861,7 @@ def display_tracks(*track_names):
 
 def add_vcs(coll):
     print(f"Adding vcs for coll {coll}")
-    vcs_url = f"{CLOUD_PATH}/vcs/{coll}_vcs.json"
+    vcs_url = f"{CLOUD_PATH}/vcs/{_quote(coll)}_vcs.json"
     print(vcs_url)
     resp = None
     try:
@@ -851,7 +870,7 @@ def add_vcs(coll):
             vcs = resp.json()
         else:
             print(f"status was {resp.status_code}")
-            api_request = f"{API}/vcs/{coll}"
+            api_request = f"{API}/vcs/{_quote(coll)}"
             print(f"API request is {api_request}")
             resp = requests.get(api_request)
             vcs = resp.json()[coll]
