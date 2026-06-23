@@ -891,14 +891,21 @@ def show_collections(collection_list):
 
 
 def test_update():
-    vcs = load_vcs("GratefulDead")
-    coll_dates = vcs.keys()
-    min_year = tm.y._min_val
-    max_year = tm.y._max_val
-    min_year = min(int(min(coll_dates)[:4]), min_year)
-    max_year = max(int(max(coll_dates)[:4]), max_year)
-    print(f"Max year {max_year}, Min year {min_year}")
-    assert (max_year - min_year) >= 29
+    # Boot-time sanity check called from main.test_update() before the
+    # Welcome screen. Upstream asserted on a specific GratefulDead vcs
+    # file; in the fork the indexer is the truth, so just confirm it
+    # responds with a non-empty artist list.
+    url = f"{INDEXER_BASE_URL}/sundry/etree_collection_names.json"
+    resp = None
+    try:
+        resp = requests.get(url)
+        assert resp.status_code == 200, f"indexer returned {resp.status_code}"
+        items = resp.json().get("items", [])
+        assert len(items) > 0, "indexer returned an empty artist list"
+        print(f"indexer ok: {len(items)} artists")
+    finally:
+        if resp is not None:
+            resp.close()
 
 
 def refresh_meta_needed():
